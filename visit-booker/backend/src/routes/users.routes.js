@@ -1,27 +1,27 @@
 import { Router } from "express";
 
-const router = Router();
+const usersRouter = Router();
 
 const users = [];
 let nextId = 1;
 
-router.get("/", (req, res) => {
+usersRouter.get("/", (req, res) => {
   res.json(users);
 });
 
-router.get("/:id", (req, res) => {
+usersRouter.get("/:id", (req, res) => {
   const user = users.find((u) => u.id === parseInt(req.params.id));
   if (!user) {
-    return json({ message: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
   res.json(user);
 });
 
-router.post("/", (req, res) => {
+usersRouter.post("/", (req, res) => {
   const { name, email } = req.body;
 
   if (!name || !email) {
-    return json({ message: "Name and email required" });
+    return res.status(400).json({ message: "Name and email required" });
   }
 
   const newUser = { id: nextId++, name, email };
@@ -30,10 +30,10 @@ router.post("/", (req, res) => {
   res.json(newUser);
 });
 
-router.put("/:id", (req, res) => {
+usersRouter.put("/:id", (req, res) => {
   const user = users.find((u) => u.id === parseInt(req.params.id));
   if (!user) {
-    return json({ message: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
 
   const { name, email } = req.body;
@@ -43,13 +43,13 @@ router.put("/:id", (req, res) => {
   res.json(user);
 });
 
-router.delete("/:id", (req, res) => {
+usersRouter.delete("/:id", (req, res) => {
   const index = users.findIndex((u) => u.id === parseInt(req.params.id));
   if (index === -1) {
-    return json({ message: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
   const deleted = users.splice(index, 1);
   res.json(deleted[0]);
 });
 
-export default router;
+export default usersRouter;
