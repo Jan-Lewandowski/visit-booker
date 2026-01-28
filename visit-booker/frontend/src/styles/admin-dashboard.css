@@ -1,0 +1,120 @@
+.admin-dashboard {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.admin-section {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+}
+
+.admin-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-input {
+  padding: 8px;
+  min-width: 180px;
+}
+
+.admin-button {
+  padding: 8px 12px;
+}
+
+.admin-button.danger {
+  background: #ff8686;
+}
+
+.admin-error {
+  color: crimson;
+}
+
+.admin-note {
+  color: #666;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 8px;
+  text-align: left;
+}
+
+.admin-calendar-controls {
+  margin-bottom: 12px;
+}
+
+.admin-calendar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.admin-slot {
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.admin-slot.free {
+  background: #f7fafc;
+}
+
+.admin-slot.busy {
+  background: #ff8a8a;
+  border-color: #c8d6ff;
+}
+
+.admin-slot-time {
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-slot-details {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.admin-slot-empty {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #777;
+}
+
+.admin-editor {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+}
+
+.admin-editor-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-notifications {
+  list-style: disc;
+  padding-left: 20px;
+}

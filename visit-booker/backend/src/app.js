@@ -5,20 +5,30 @@ import session from "express-session";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ["http://localhost:3000"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 
 app.use(
   session({
+    name: "visit-booker.sid",
     secret: "secret_key",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 30,
+      sameSite: "lax",
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 7,
     },
-  })
+  }),
 );
 app.use("/api", router);
 

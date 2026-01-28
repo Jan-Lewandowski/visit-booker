@@ -1,16 +1,26 @@
 import { Router } from "express";
+import { appointments, generateAppointmentId } from "../data/appointments.data.js";
 import { categories } from "../data/categories.data.js";
-import { auth } from "../middleware/auth.middleware.js"
 import { adminOnly } from "../middleware/admin.middleware.js";
+import { auth } from "../middleware/auth.middleware.js";
 import { broadcast } from "../websocket.js";
 
-const appointments = [];
-let nextAppointmentId = 1;
 
 const appointmentsRouter = Router();
+const OPEN_HOUR = 8;
+const CLOSE_HOUR = 16;
 
 function appointmentDateTime(date, time) {
   return new Date(`${date}T${time}`);
+}
+
+function normalizeTime(hour, minute) {
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+function hourFromTime(time) {
+  const [hour] = String(time).split(":").map(Number);
+  return Number.isNaN(hour) ? null : hour;
 }
 
 appointmentsRouter.get("/", auth, adminOnly, (req, res) => {
@@ -39,8 +49,7 @@ appointmentsRouter.post("/", auth, (req, res) => {
       message: "appointments must start at full hour",
     });
   }
-  const OPEN_HOUR = 8;
-  const CLOSE_HOUR = 16;
+  const normalizedTime = normalizeTime(hour, 0);
   if (hour < OPEN_HOUR || hour >= CLOSE_HOUR) {
     return res.status(400).json({
       message: "appointments can be booked only between 08:00 and 16:00",
@@ -48,7 +57,7 @@ appointmentsRouter.post("/", auth, (req, res) => {
   }
 
   const now = new Date();
-  const appointmentTime = new Date(`${date}T${time}`);
+  const appointmentTime = new Date(`${date}T${normalizedTime}`);
   if (appointmentTime < now) {
     return res.status(400).json({
       message: "cannot create appointment in the past",
@@ -57,11 +66,6 @@ appointmentsRouter.post("/", auth, (req, res) => {
 
   const diffMs = appointmentTime - now;
   const diffHours = diffMs / (1000 * 60 * 60);
-  if (diffHours < 2) {
-    return res.status(400).json({
-      message: "appointments must be booked at least 2 hours in advance",
-    });
-  }
 
   const category = categories.find((c) => c.id === Number(categoryId));
   if (!category) {
@@ -75,7 +79,8 @@ appointmentsRouter.post("/", auth, (req, res) => {
   }
 
   const isBooked = appointments.find(
-    (a) => a.serviceId === service.id && a.date === date && a.time === time,
+    (a) =>
+      a.serviceId === service.id && a.date === date && a.time === normalizedTime,
   );
   if (isBooked) {
     return res.status(409).json({
@@ -84,18 +89,42 @@ appointmentsRouter.post("/", auth, (req, res) => {
   }
 
   const newAppointment = {
-    id: nextAppointmentId++,
+    id: generateAppointmentId(),
     userId: req.session.user.id,
     categoryId: category.id,
     serviceId: service.id,
     date,
-    time,
+    time: normalizedTime,
     status: "scheduled",
   };
 
   appointments.push(newAppointment);
   broadcast({ type: "appointments:created", appointment: newAppointment });
   res.status(201).json(newAppointment);
+});
+
+appointmentsRouter.get("/available", auth, (req, res) => {
+  const { serviceId, date } = req.query;
+
+  if (!serviceId || !date) {
+    return res.status(400).json({
+      message: "serviceId and date are required",
+    });
+  }
+
+  const slots = [];
+  for (let hour = OPEN_HOUR; hour < CLOSE_HOUR; hour++) {
+    const time = `${String(hour).padStart(2, "0")}:00`;
+
+    const isBooked = appointments.find((a) => {
+      if (a.serviceId !== Number(serviceId) || a.date !== date) return false;
+      const bookedHour = hourFromTime(a.time);
+      return bookedHour === hour;
+    });
+    if (!isBooked) slots.push(time);
+  }
+
+  res.json({ availableSlots: slots });
 });
 
 appointmentsRouter.put("/:id", auth, (req, res) => {
@@ -134,7 +163,10 @@ appointmentsRouter.put("/:id", auth, (req, res) => {
   }
 
   if (date) appointment.date = date;
-  if (time) appointment.time = time;
+  if (time) {
+    const [hour, minute] = time.split(":").map(Number);
+    appointment.time = normalizeTime(hour, minute || 0);
+  }
 
   broadcast({ type: "appointments:updated", appointment });
   res.json(appointment);
@@ -177,7 +209,7 @@ appointmentsRouter.delete("/:id", auth, (req, res) => {
 
   appointments.splice(appointmentIndex, 1);
   broadcast({ type: "appointments:deleted", appointmentId: appointment.id });
-  res.status(204).send();
+  res.status(204).json("appointment deleted");
 });
 
 export default appointmentsRouter;

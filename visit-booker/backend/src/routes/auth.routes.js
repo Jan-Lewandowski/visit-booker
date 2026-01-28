@@ -58,6 +58,17 @@ authRouter.post("/login", async (req, res) => {
   res.json({ message: "logged in" });
 });
 
+authRouter.get("/me", (req, res) => {
+  if (!req.session?.user) {
+    return res.status(401).json({ message: "not authenticated" });
+  }
+
+  res.json({
+    id: req.session.user.id,
+    role: req.session.user.role,
+  });
+});
+
 authRouter.post("/logout", (req, res) => {
   req.session.destroy(() => {
     res.clearCookie("visit-booker.sid");

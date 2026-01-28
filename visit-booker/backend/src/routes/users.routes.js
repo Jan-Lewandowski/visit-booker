@@ -26,4 +26,15 @@ usersRouter.delete("/:id", auth, adminOnly, (req, res) => {
   res.json(deleted[0]);
 });
 
+usersRouter.put("/:id", auth, adminOnly, (req, res) => {
+  const user = users.find((u) => u.id === Number(req.params.id));
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const { role } = req.body;
+
+  if (role) user.role = role;
+  res.json(user);
+});
+
 export default usersRouter;

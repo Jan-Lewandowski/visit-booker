@@ -77,6 +77,27 @@ categoriesRouter.post("/:categoryId/services", auth, adminOnly, (req, res) => {
   res.status(201).json(newService);
 });
 
+categoriesRouter.put("/:categoryId/services/:serviceId", auth, adminOnly, (req, res) => {
+  const { categoryId, serviceId } = req.params;
+  const { name, duration, price } = req.body;
+
+  const category = categories.find((c) => c.id === Number(categoryId));
+  if (!category) {
+    return res.status(404).json({ message: "category not found" });
+  }
+
+  const service = category.services.find((s) => s.id === Number(serviceId));
+  if (!service) {
+    return res.status(404).json({ message: "service not found" });
+  }
+
+  if (name) service.name = name;
+  if (duration) service.duration = duration;
+  if (price) service.price = price;
+
+  res.json(service);
+});
+
 categoriesRouter.put("/:id", auth, adminOnly, (req, res) => {
   const categoryId = Number(req.params.id);
   const { name } = req.body;

@@ -1,0 +1,26 @@
+.landing {
+  padding: 24px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.landing-label {
+  display: block;
+  margin-top: 12px;
+}
+
+.landing-input {
+  display: block;
+  margin-top: 6px;
+  padding: 8px;
+  width: 100%;
+}
+
+.landing-button {
+  margin-top: 12px;
+  padding: 8px 12px;
+}
+
+.landing-error {
+  color: crimson;
+}

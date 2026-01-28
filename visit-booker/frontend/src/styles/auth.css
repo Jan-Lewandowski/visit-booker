@@ -1,0 +1,40 @@
+.auth {
+  padding: 24px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.auth-title {
+  margin: 0;
+}
+
+.auth-form {
+  margin-top: 12px;
+}
+
+.auth-label {
+  display: block;
+  margin-top: 12px;
+}
+
+.auth-input {
+  display: block;
+  margin-top: 6px;
+  padding: 8px;
+  width: 100%;
+}
+
+.auth-error {
+  color: crimson;
+  margin-top: 8px;
+}
+
+.auth-submit {
+  margin-top: 12px;
+  padding: 8px 12px;
+}
+
+.auth-toggle {
+  margin-top: 12px;
+  padding: 6px 10px;
+}

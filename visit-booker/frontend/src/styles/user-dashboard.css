@@ -1,0 +1,105 @@
+.user-dashboard {
+  padding: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.user-section {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.user-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-input {
+  padding: 8px;
+}
+
+.user-button {
+  margin-top: 12px;
+  margin-right: 8px;
+  padding: 8px 12px;
+}
+
+.user-button.secondary {
+  background: #f0f0f0;
+}
+
+.user-button.danger {
+  background: #ffe2e2;
+}
+
+.user-error {
+  color: crimson;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.user-table th,
+.user-table td {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 8px;
+  text-align: left;
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.user-calendar {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.user-slot {
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.user-slot.free {
+  background: #77fdaa;
+  border-color: #bfe3c9;
+}
+
+.user-slot.booked {
+  background: #ff9191;
+  border-color: #f3c2c2;
+  cursor: not-allowed;
+}
+
+.user-slot.selected {
+  outline: 2px solid #3b82f6;
+}
+
+.user-slot-time {
+  font-weight: 600;
+  color: black;
+}
+
+.user-slot-status {
+  font-size: 13px;
+  color: #555;
+}
