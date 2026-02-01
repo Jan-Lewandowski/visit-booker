@@ -30,6 +30,10 @@ categoriesRouter.get("/:categoryId/services", auth, (req, res) => {
 
 categoriesRouter.get("/:categoryId/services/search", auth, (req, res) => {
   const { q } = req.query;
+  if (!q) {
+    return res.status(400).json({ message: "query parameter 'q' is required" });
+  }
+
   const category = categories.find(
     (c) => c.id === Number(req.params.categoryId),
   );
@@ -37,9 +41,6 @@ categoriesRouter.get("/:categoryId/services/search", auth, (req, res) => {
     return res.status(404).json({ message: "category not found" });
   }
 
-  if (!q) {
-    return res.status(400).json({ message: "query parameter 'q' is required" });
-  }
 
   const result = (category.services || []).filter((service) =>
     service.name.toLowerCase().includes(q.toLowerCase()),

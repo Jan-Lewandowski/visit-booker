@@ -8,7 +8,11 @@ export type Appointment = {
   status: "scheduled" | "cancelled";
 };
 
-export type AppointmentEvent =
-  | { type: "appointments:created"; appointment: Appointment }
-  | { type: "appointments:updated"; appointment: Appointment }
-  | { type: "appointments:deleted"; appointmentId: number };
+export type AppointmentEvent = {
+  type: "appointments:update";
+  event: "created" | "updated" | "deleted";
+  payload: {
+    appointment?: Appointment;
+    appointmentId?: number;
+  };
+};

@@ -1,36 +1,25 @@
 "use client";
 
-import { Appointment, Category } from "../../types/entities";
+import { useUserDashboard } from "../../context/UserDashboardContext";
 
-type UserAppointmentsProps = {
-  appointments: Appointment[];
-  appointmentsError: string | null;
-  categories: Category[];
-  editingId: number | null;
-  editDate: string;
-  editTime: string;
-  onStartEdit: (appointment: Appointment) => void;
-  onCancelEdit: () => void;
-  onSaveEdit: (appointmentId: number) => void;
-  onDelete: (appointmentId: number) => void;
-  onEditDateChange: (value: string) => void;
-  onEditTimeChange: (value: string) => void;
-};
-
-export default function UserAppointments({
-  appointments,
-  appointmentsError,
-  categories,
-  editingId,
-  editDate,
-  editTime,
-  onStartEdit,
-  onCancelEdit,
-  onSaveEdit,
-  onDelete,
-  onEditDateChange,
-  onEditTimeChange,
-}: UserAppointmentsProps) {
+export default function UserAppointments() {
+  const {
+    appointments,
+    appointmentsError,
+    categories,
+    editingId,
+    editDate,
+    editTime,
+    editSlots,
+    editSlotsLoading,
+    editSlotsError,
+    startEdit,
+    cancelEdit,
+    saveEdit,
+    deleteAppointment,
+    setEditDate,
+    setEditTime,
+  } = useUserDashboard();
   const getCategoryName = (categoryId: number) =>
     categories.find((category) => category.id === categoryId)?.name || categoryId;
 
@@ -41,6 +30,10 @@ export default function UserAppointments({
       serviceId
     );
   };
+
+  const editSlotOptions = editTime && !editSlots.includes(editTime)
+    ? [editTime, ...editSlots]
+    : editSlots;
 
   return (
     <section className="user-section">
@@ -72,7 +65,7 @@ export default function UserAppointments({
                     <input
                       type="date"
                       value={editDate}
-                      onChange={(e) => onEditDateChange(e.target.value)}
+                      onChange={(e) => setEditDate(e.target.value)}
                       className="user-input"
                     />
                   ) : (
@@ -81,12 +74,28 @@ export default function UserAppointments({
                 </td>
                 <td>
                   {editingId === appointment.id ? (
-                    <input
-                      type="time"
+                    <select
                       value={editTime}
-                      onChange={(e) => onEditTimeChange(e.target.value)}
+                      onChange={(e) => setEditTime(e.target.value)}
                       className="user-input"
-                    />
+                      disabled={editSlotsLoading || editSlotOptions.length === 0}
+                    >
+                      {editSlotsLoading && (
+                        <option value="" disabled>
+                          Ładowanie slotów...
+                        </option>
+                      )}
+                      {!editSlotsLoading && editSlotOptions.length === 0 && (
+                        <option value="" disabled>
+                          Brak dostępnych slotów
+                        </option>
+                      )}
+                      {editSlotOptions.map((slot) => (
+                        <option key={slot} value={slot}>
+                          {slot}
+                        </option>
+                      ))}
+                    </select>
                   ) : (
                     appointment.time
                   )}
@@ -97,14 +106,14 @@ export default function UserAppointments({
                       <button
                         type="button"
                         className="user-button"
-                        onClick={() => onSaveEdit(appointment.id)}
+                        onClick={() => saveEdit(appointment.id)}
                       >
                         Zapisz
                       </button>
                       <button
                         type="button"
                         className="user-button secondary"
-                        onClick={onCancelEdit}
+                        onClick={cancelEdit}
                       >
                         Anuluj
                       </button>
@@ -114,14 +123,14 @@ export default function UserAppointments({
                       <button
                         type="button"
                         className="user-button"
-                        onClick={() => onStartEdit(appointment)}
+                        onClick={() => startEdit(appointment)}
                       >
                         Edytuj
                       </button>
                       <button
                         type="button"
                         className="user-button danger"
-                        onClick={() => onDelete(appointment.id)}
+                        onClick={() => deleteAppointment(appointment.id)}
                       >
                         Usuń
                       </button>
@@ -132,6 +141,9 @@ export default function UserAppointments({
             ))}
           </tbody>
         </table>
+      )}
+      {editingId && editSlotsError && (
+        <p className="user-error">{editSlotsError}</p>
       )}
     </section>
   );

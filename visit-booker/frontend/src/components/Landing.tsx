@@ -33,6 +33,7 @@ export default function Landing({ enabled = true }: LandingProps) {
     serviceId,
     date,
     enabled,
+    categoryId,
   );
 
   useEffect(() => {

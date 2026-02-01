@@ -1,10 +1,9 @@
 "use client";
 
-type AdminNotificationsProps = {
-  notifications: string[];
-};
+import { useAdminDashboard } from "../../context/AdminDashboardContext";
 
-export default function AdminNotifications({ notifications }: AdminNotificationsProps) {
+export default function AdminNotifications() {
+  const { notifications } = useAdminDashboard();
   return (
     <section className="admin-section">
       <h3>Powiadomienia w czasie rzeczywistym</h3>

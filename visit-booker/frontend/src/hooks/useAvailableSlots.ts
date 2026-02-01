@@ -16,6 +16,7 @@ export function useAvailableSlots(
   serviceId: number,
   date: string,
   enabled = true,
+  categoryId?: number | null,
 ) {
   const [state, setState] = useState<SlotsState>({
     slots: [],
@@ -31,6 +32,9 @@ export function useAvailableSlots(
         serviceId: String(serviceId),
         date,
       });
+      if (categoryId) {
+        params.set("categoryId", String(categoryId));
+      }
       const res = await fetch(
         `${API_URL}/api/appointments/available?${params.toString()}`,
         { credentials: "include" },
@@ -50,7 +54,7 @@ export function useAvailableSlots(
     if (enabled) {
       fetchSlots();
     }
-  }, [enabled, serviceId, date]);
+  }, [enabled, serviceId, date, categoryId]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -63,16 +67,15 @@ export function useAvailableSlots(
     ws.onmessage = (message) => {
       try {
         const event = JSON.parse(message.data) as AppointmentEvent;
-        if (event.type.startsWith("appointments:")) {
+        if (event.type === "appointments:update") {
           fetchSlots();
         }
       } catch {
-        // ignore malformed messages
       }
     };
 
     return () => ws.close();
-  }, [enabled, serviceId, date]);
+  }, [enabled, serviceId, date, categoryId]);
 
   return {
     slots: state.slots,

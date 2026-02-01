@@ -1,97 +1,72 @@
 "use client";
 
-import { Category, Service } from "../../types/entities";
+import { useAdminDashboard } from "../../context/AdminDashboardContext";
 
-type AdminServiceManagementProps = {
-  categories: Category[];
-  serviceCategoryId: number | null;
-  serviceName: string;
-  serviceDuration: string;
-  servicePrice: string;
-  editingServiceId: number | null;
-  editingServiceName: string;
-  editingServiceDuration: string;
-  editingServicePrice: string;
-  onServiceCategoryChange: (value: number) => void;
-  onServiceNameChange: (value: string) => void;
-  onServiceDurationChange: (value: string) => void;
-  onServicePriceChange: (value: string) => void;
-  onCreateService: () => void;
-  onStartEditService: (service: Service) => void;
-  onCancelEditService: () => void;
-  onEditingServiceNameChange: (value: string) => void;
-  onEditingServiceDurationChange: (value: string) => void;
-  onEditingServicePriceChange: (value: string) => void;
-  onSaveService: (serviceId: number) => void;
-};
-
-export default function AdminServiceManagement({
-  categories,
-  serviceCategoryId,
-  serviceName,
-  serviceDuration,
-  servicePrice,
-  editingServiceId,
-  editingServiceName,
-  editingServiceDuration,
-  editingServicePrice,
-  onServiceCategoryChange,
-  onServiceNameChange,
-  onServiceDurationChange,
-  onServicePriceChange,
-  onCreateService,
-  onStartEditService,
-  onCancelEditService,
-  onEditingServiceNameChange,
-  onEditingServiceDurationChange,
-  onEditingServicePriceChange,
-  onSaveService,
-}: AdminServiceManagementProps) {
+export default function AdminServiceManagement() {
+  const {
+    categories,
+    serviceCategoryId,
+    serviceName,
+    serviceDuration,
+    servicePrice,
+    editingServiceId,
+    editingServiceName,
+    editingServiceDuration,
+    editingServicePrice,
+    setServiceCategoryId,
+    setServiceName,
+    setServiceDuration,
+    setServicePrice,
+    createService,
+    startEditService,
+    cancelEditService,
+    setEditingServiceName,
+    setEditingServiceDuration,
+    setEditingServicePrice,
+    saveService,
+  } = useAdminDashboard();
   const selectedCategory = categories.find(
     (category) => category.id === serviceCategoryId,
   );
   const services = selectedCategory?.services ?? [];
 
-  const getDuration = (service: Service) =>
+  const getDuration = (service: { duration?: number; durationMinutes?: number }) =>
     service.duration ?? service.durationMinutes ?? "";
 
   return (
     <section className="admin-section">
       <h3>Zarządzanie usługami</h3>
       <div className="admin-form">
-        <label>
-          Kategoria
-          <select
-            className="admin-input"
-            value={serviceCategoryId ?? ""}
-            onChange={(e) => onServiceCategoryChange(Number(e.target.value))}
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.id}
-              </option>
-            ))}
-          </select>
-        </label>
+        <select
+          className="admin-input"
+          value={serviceCategoryId ?? ""}
+          onChange={(e) => setServiceCategoryId(Number(e.target.value))}
+        >
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name || category.id}
+            </option>
+          ))}
+        </select>
         <input
           className="admin-input"
           placeholder="Nazwa usługi"
           value={serviceName}
-          onChange={(e) => onServiceNameChange(e.target.value)}
+          onChange={(e) => setServiceName(e.target.value)}
         />
         <input
           className="admin-input"
           placeholder="Czas trwania (minuty)"
           value={serviceDuration}
-          onChange={(e) => onServiceDurationChange(e.target.value)}
+          onChange={(e) => setServiceDuration(e.target.value)}
         />
         <input
           className="admin-input"
           placeholder="Cena"
           value={servicePrice}
-          onChange={(e) => onServicePriceChange(e.target.value)}
+          onChange={(e) => setServicePrice(e.target.value)}
         />
-        <button className="admin-button" onClick={onCreateService}>
+        <button className="admin-button" onClick={createService}>
           Dodaj usługę
         </button>
       </div>
@@ -120,7 +95,7 @@ export default function AdminServiceManagement({
                   <input
                     className="admin-input"
                     value={editingServiceName}
-                    onChange={(e) => onEditingServiceNameChange(e.target.value)}
+                    onChange={(e) => setEditingServiceName(e.target.value)}
                   />
                 ) : (
                   service.name
@@ -131,9 +106,7 @@ export default function AdminServiceManagement({
                   <input
                     className="admin-input"
                     value={editingServiceDuration}
-                    onChange={(e) =>
-                      onEditingServiceDurationChange(e.target.value)
-                    }
+                    onChange={(e) => setEditingServiceDuration(e.target.value)}
                   />
                 ) : (
                   getDuration(service)
@@ -144,7 +117,7 @@ export default function AdminServiceManagement({
                   <input
                     className="admin-input"
                     value={editingServicePrice}
-                    onChange={(e) => onEditingServicePriceChange(e.target.value)}
+                    onChange={(e) => setEditingServicePrice(e.target.value)}
                   />
                 ) : (
                   service.price
@@ -155,13 +128,13 @@ export default function AdminServiceManagement({
                   <div className="admin-editor-actions">
                     <button
                       className="admin-button"
-                      onClick={() => onSaveService(service.id)}
+                      onClick={() => saveService(service.id)}
                     >
                       Zapisz
                     </button>
                     <button
                       className="admin-button danger"
-                      onClick={onCancelEditService}
+                      onClick={cancelEditService}
                     >
                       Anuluj
                     </button>
@@ -169,7 +142,7 @@ export default function AdminServiceManagement({
                 ) : (
                   <button
                     className="admin-button"
-                    onClick={() => onStartEditService(service)}
+                    onClick={() => startEditService(service)}
                   >
                     Edytuj
                   </button>

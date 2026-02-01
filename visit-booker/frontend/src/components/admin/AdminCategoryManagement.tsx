@@ -1,34 +1,21 @@
 "use client";
 
-import { Category } from "../../types/entities";
+import { useAdminDashboard } from "../../context/AdminDashboardContext";
 
-type AdminCategoryManagementProps = {
-  categories: Category[];
-  categoriesError: string | null;
-  newCategoryName: string;
-  editingCategoryId: number | null;
-  editingCategoryName: string;
-  onNewCategoryNameChange: (value: string) => void;
-  onEditingCategoryNameChange: (value: string) => void;
-  onCreateCategory: () => void;
-  onStartEditCategory: (category: Category) => void;
-  onSaveCategory: (categoryId: number) => void;
-  onDeleteCategory: (categoryId: number) => void;
-};
-
-export default function AdminCategoryManagement({
-  categories,
-  categoriesError,
-  newCategoryName,
-  editingCategoryId,
-  editingCategoryName,
-  onNewCategoryNameChange,
-  onEditingCategoryNameChange,
-  onCreateCategory,
-  onStartEditCategory,
-  onSaveCategory,
-  onDeleteCategory,
-}: AdminCategoryManagementProps) {
+export default function AdminCategoryManagement() {
+  const {
+    categories,
+    categoriesError,
+    newCategoryName,
+    editingCategoryId,
+    editingCategoryName,
+    setNewCategoryName,
+    setEditingCategoryName,
+    createCategory,
+    startEditCategory,
+    saveCategory,
+    deleteCategory,
+  } = useAdminDashboard();
   return (
     <section className="admin-section">
       <h3>Zarządzanie kategoriami</h3>
@@ -38,9 +25,9 @@ export default function AdminCategoryManagement({
           className="admin-input"
           placeholder="Nazwa nowej kategorii"
           value={newCategoryName}
-          onChange={(e) => onNewCategoryNameChange(e.target.value)}
+          onChange={(e) => setNewCategoryName(e.target.value)}
         />
-        <button className="admin-button" onClick={onCreateCategory}>
+        <button className="admin-button" onClick={createCategory}>
           Dodaj kategorię
         </button>
       </div>
@@ -63,7 +50,7 @@ export default function AdminCategoryManagement({
                   <input
                     className="admin-input"
                     value={editingCategoryName}
-                    onChange={(e) => onEditingCategoryNameChange(e.target.value)}
+                    onChange={(e) => setEditingCategoryName(e.target.value)}
                   />
                 ) : (
                   category.name
@@ -81,21 +68,21 @@ export default function AdminCategoryManagement({
                 {editingCategoryId === category.id ? (
                   <button
                     className="admin-button"
-                    onClick={() => onSaveCategory(category.id)}
+                    onClick={() => saveCategory(category.id)}
                   >
                     Zapisz
                   </button>
                 ) : (
                   <button
                     className="admin-button"
-                    onClick={() => onStartEditCategory(category)}
+                    onClick={() => startEditCategory(category)}
                   >
                     Edytuj
                   </button>
                 )}
                 <button
                   className="admin-button danger"
-                  onClick={() => onDeleteCategory(category.id)}
+                  onClick={() => deleteCategory(category.id)}
                 >
                   Usuń
                 </button>
