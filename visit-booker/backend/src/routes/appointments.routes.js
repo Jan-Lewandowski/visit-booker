@@ -54,7 +54,7 @@ appointmentsRouter.post("/", auth, async (req, res) => {
   const appointmentTime = new Date(`${date}T${normalizedTime}`);
   if (appointmentTime < now) {
     return res.status(400).json({
-      message: "cannot create appointment in the past",
+      message: "Nie można zarezerwować wizyty w przeszłości",
     });
   }
 

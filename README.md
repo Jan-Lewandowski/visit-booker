@@ -21,7 +21,7 @@ cd backend
 npm install
 ```
 
-Utwórz plik `.env` w katalogu głównym projektu (na tym samym poziomie co `backend` i `frontend`):
+Utwórz plik `.env` w katalogu backend:
 ```
 GMAIL_USER=your@gmail.com
 GMAIL_APP_PASSWORD=your_app_password
@@ -50,7 +50,7 @@ npm run dev
 Frontend działa pod: http://localhost:3000
 
 ## Dane i seed
-Plik bazy SQLite jest domyślnie w `backend/data/visit_booker.sqlite`. Jeśli plik nie istnieje, schemat i dane startowe są tworzone automatycznie.
+Plik bazy SQLite jest domyślnie w `backend/data/visit_booker.sqlite`. Najpierw należy dodać foler data do folderu backend.Jeśli plik nie istnieje, schemat i dane startowe są tworzone automatycznie.
 
 ## Funkcje
 - Rejestracja/logowanie z sesjami
