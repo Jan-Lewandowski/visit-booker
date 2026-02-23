@@ -1,5 +1,10 @@
 # VisitBooker
-
+<p align="center">
+<img width="24%" height="966" alt="Zrzut ekranu 2026-02-23 185525" src="https://github.com/user-attachments/assets/5998d5ca-e7d1-466e-af01-4c9fc608791e" />
+<img width="24%" height="1080" alt="Zrzut ekranu 2026-02-23 185536" src="https://github.com/user-attachments/assets/137ee206-7251-4d7b-8f1b-ed133efe0dff" />
+<img width="24%" height="455" alt="Zrzut ekranu 2026-02-23 185559" src="https://github.com/user-attachments/assets/27630255-85a0-4105-984a-5385a60354c4" />
+<img width="24%" height="603" alt="Zrzut ekranu 2026-02-23 185605" src="https://github.com/user-attachments/assets/c1cb9106-7763-46d8-8849-8a424bde3948" />
+</p>
 A full-stack appointment booking application with real-time updates, an admin panel, and email notifications.
 
 ## Technologies
